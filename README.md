@@ -19,3 +19,10 @@ work. Rendering some things on the PS2 is working as a test only.
 
 Get premake5. Generate a config, e.g. with ``premake5 gmake``,
 and look in the build directory.
+
+Or use cmake.
+```
+mkdir build && cd build
+cmake .. -DLIBRW_PLATFORM=GL3
+make
+```
