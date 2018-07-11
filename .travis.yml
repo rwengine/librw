@@ -3,41 +3,28 @@ language: cpp
 matrix:
   include:
   - os: linux
-    env: TARGET=release_linux-amd64-null
+    env: LIBRW_PLATFORM="NULL"
     script:
-    - mkdir -p "$TRAVIS_BUILD_DIR/build"
-    #- docker build -t librw "$TRAVIS_BUILD_DIR"
-    #- docker run -v "$TRAVIS_BUILD_DIR:/librw:rw,z" --name librw_instance -d librw sleep infinity
-    - docker pull librw/librw
-    - docker run -v "$TRAVIS_BUILD_DIR:/librw:rw,z" -v "$TRAVIS_BUILD_DIR/build:/build:rw,z" --name librw_instance -d librw/librw sleep infinity
-    - docker exec -u builder librw_instance /bin/bash -c "cd /librw && premake5 gmake && cd /librw/build && make config=$TARGET verbose=1"
+    - mkdir -p "$TRAVIS_BUILD_DIR/build" && cd "$TRAVIS_BUILD_DIR/build"
+    - cmake "$TRAVIS_BUILD_DIR" -DLIBRW_TOOLS=ON -DLIBRW_INSTALL=ON -DLIBRW_PLATFORM="$LIBRW_PLATFORM"
+    - make VERBOSE=y DESTDIR=/tmp install
   - os: linux
-    env: TARGET=release_linux-amd64-gl3 GFXLIB=glfw
+    env: LIBRW_PLATFORM="GL3"
     services: docker
     script:
     - mkdir -p "$TRAVIS_BUILD_DIR/build"
-    #- docker build -t librw "$TRAVIS_BUILD_DIR"
-    #- docker run -v "$TRAVIS_BUILD_DIR:/librw:rw,z" --name librw_instance -d librw sleep infinity
-    - docker pull librw/librw
-    - docker run -v "$TRAVIS_BUILD_DIR:/librw:rw,z" -v "$TRAVIS_BUILD_DIR/build:/build:rw,z" --name librw_instance -d librw/librw sleep infinity
-    - docker exec -u builder librw_instance /bin/bash -c "cd /librw && premake5 --gfxlib=$GFXLIB gmake && cd /librw/build && make config=$TARGET verbose=1"
+    #- docker build -t librw_gl3 -f "$TRAVIS_BUILD_DIR/docker/gl3.docker" docker
+    #- docker run -v "$TRAVIS_BUILD_DIR:/librw:ro,z" -v "$TRAVIS_BUILD_DIR:/build:rw,z" --name gl3_instance -d librw_gl3 sleep infinity
+    - docker pull librw/gl3
+    - docker run -v "$TRAVIS_BUILD_DIR:/librw:ro,z" -v "$TRAVIS_BUILD_DIR:/build:rw,z" --name gl3_instance -d librw/gl3 sleep infinity
+    - docker exec -u builder gl3_instance /bin/bash -c "cd /build && cmake /librw -DLIBRW_TOOLS=ON -DLIBRW_INSTALL=ON -DLIBRW_PLATFORM=$LIBRW_PLATFORM && make VERBOSE=y DESTDIR=/tmp install"
   - os: linux
-    env: TARGET=release_linux-amd64-gl3 GFXLIB=sdl2
+    env: LIBRW_PLATFORM="PS2"
     services: docker
     script:
     - mkdir -p "$TRAVIS_BUILD_DIR/build"
-    #- docker build -t librw "$TRAVIS_BUILD_DIR"
-    #- docker run -v "$TRAVIS_BUILD_DIR:/librw:rw,z" --name librw_instance -d librw sleep infinity
-    - docker pull librw/librw
-    - docker run -v "$TRAVIS_BUILD_DIR:/librw:rw,z" -v "$TRAVIS_BUILD_DIR/build:/build:rw,z" --name librw_instance -d librw/librw sleep infinity
-    - docker exec -u builder librw_instance /bin/bash -c "cd /librw && premake5 --gfxlib=$GFXLIB gmake && cd /librw/build && make config=$TARGET verbose=1"
-  - os: linux
-    env: TARGET=release_ps2
-    services: docker
-    script:
-    - mkdir -p "$TRAVIS_BUILD_DIR/build"
-    #- docker build -t librw "$TRAVIS_BUILD_DIR"
-    #- docker run -v "$TRAVIS_BUILD_DIR:/librw:rw,z" --name librw_instance -d librw sleep infinity
-    - docker pull librw/librw
-    - docker run -v "$TRAVIS_BUILD_DIR:/librw:rw,z" -v "$TRAVIS_BUILD_DIR/build:/build:rw,z" --name librw_instance -d librw/librw sleep infinity
-    - docker exec -u builder librw_instance /bin/bash -c "cd /librw && premake5 gmake && cd /librw/build && make config=$TARGET verbose=1"
+    #- docker build -t librw_ps2 -f "$TRAVIS_BUILD_DIR/docker/ps2.docker" docker
+    #- docker run -v "$TRAVIS_BUILD_DIR:/librw:ro,z" -v "$TRAVIS_BUILD_DIR:/build:rw,z" --name ps2_instance -d librw_ps2 sleep infinity
+    - docker pull librw/ps2
+    - docker run -v "$TRAVIS_BUILD_DIR:/librw:ro,z" -v "$TRAVIS_BUILD_DIR:/build:rw,z" --name ps2_instance -d librw/ps2 sleep infinity
+    - docker exec -u builder ps2_instance /bin/bash -c "cd /build && cmake /librw -DLIBRW_TOOLS=ON -DLIBRW_INSTALL=ON -DLIBRW_PLATFORM=$LIBRW_PLATFORM -DCMAKE_TOOLCHAIN_FILE=/librw/cmake/toolchain_ps2_ee.cmake && make VERBOSE=y DESTDIR=/tmp install"

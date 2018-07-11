@@ -1,36 +1,30 @@
 image: Visual Studio 2017
 configuration: Release
+platform:
+  - Win32
+  - x64
 environment:
-  GLEW_BASE: glew-2.1.0
-  GLEW_URL: https://github.com/nigels-com/glew/releases/download/glew-2.1.0/%GLEW_BASE%-win32.zip
-  GLFW_BASE: glfw-3.2.1.bin.WIN64
-  GLFW_URL: https://github.com/glfw/glfw/releases/download/3.2.1/%GLFW_BASE%.zip
-  SDL2_BASE: SDL2-devel-2.0.8-VC
-  SDL2_URL: https://www.libsdl.org/release/%SDL2_BASE%.zip
-  SDL2_DIRAME: SDL2-2.0.8
-  PREMAKE5_URL: https://github.com/premake/premake-core/releases/download/v5.0.0-alpha12/premake-5.0.0-alpha12-windows.zip
+  APPVEYOR_SAVE_CACHE_ON_ERROR: true
   matrix:
-  - PLATFORM: win-amd64-null
-  - PLATFORM: win-amd64-gl3
-    PREMAKE5_EXTRA_ARGS: --gfxlib=glfw
-  - PLATFORM: win-amd64-gl3
-    PREMAKE5_EXTRA_ARGS: --gfxlib=sdl2
-  - PLATFORM: win-amd64-d3d9
-
+    - LIBRW_PLATFORM: NULL
+    - LIBRW_PLATFORM: GL3
+    - LIBRW_PLATFORM: D3D9
 install:
-  - appveyor DownloadFile %GLFW_URL% -FileName "%APPVEYOR_BUILD_FOLDER%/%GLFW_BASE%.zip"
-  - 7z x "%APPVEYOR_BUILD_FOLDER%/%GLFW_BASE%.zip"
-  - appveyor DownloadFile %GLEW_URL% -FileName "%APPVEYOR_BUILD_FOLDER%/%GLEW_BASE%.zip"
-  - 7z x "%APPVEYOR_BUILD_FOLDER%/%GLEW_BASE%.zip"
-  - appveyor DownloadFile %SDL2_URL% -FileName "%APPVEYOR_BUILD_FOLDER%/%SDL2_BASE%.zip"
-  - 7z x "%APPVEYOR_BUILD_FOLDER%/%SDL2_BASE%.zip"
-  - appveyor DownloadFile %PREMAKE5_URL% -FileName "%APPVEYOR_BUILD_FOLDER%/premake5.zip"
-  - mkdir "%APPVEYOR_BUILD_FOLDER%/bin" && cd "%APPVEYOR_BUILD_FOLDER%/bin" && 7z x "%APPVEYOR_BUILD_FOLDER%/premake5.zip"
-  - set PATH=%APPVEYOR_BUILD_FOLDER%/bin;%PATH%
+  - if %platform%==Win32 set VCPKG_TRIPLET=x86-windows-static
+  - if %platform%==x64 set VCPKG_TRIPLET=x64-windows-static
+  - if %LIBRW_PLATFORM%==GL3 vcpkg install glfw3:%VCPKG_TRIPLET% glew:%VCPKG_TRIPLET%
 before_build:
-  - mkdir "%APPVEYOR_BUILD_FOLDER%/build"
-  - cd "%APPVEYOR_BUILD_FOLDER%"
-  - premake5 vs2017 --glewdir=%APPVEYOR_BUILD_FOLDER%/%GLEW_BASE% --glfwdir=%APPVEYOR_BUILD_FOLDER%/%GLFW_BASE% --sdl2dir=%APPVEYOR_BUILD_FOLDER%/%SDL2_DIRAME% %PREMAKE5_EXTRA_ARGS%
+  - mkdir build
+  - cd build
+  - if %platform%==Win32 set CMAKE_GENERATOR=Visual Studio 15 2017
+  - if %platform%==x64 set CMAKE_GENERATOR=Visual Studio 15 2017 Win64
+  - cmake .. -DLIBRW_TOOLS=ON -DLIBRW_INSTALL=ON -G"%CMAKE_GENERATOR%" -DVCPKG_TARGET_TRIPLET=%VCPKG_TRIPLET% -DCMAKE_TOOLCHAIN_FILE=C:/Tools/vcpkg/scripts/buildsystems/vcpkg.cmake -DLIBRW_PLATFORM=%LIBRW_PLATFORM%
 build:
   project: c:\projects\librw\build\librw.sln
   verbosity: minimal
+after_build:
+  - cd "%APPVEYOR_BUILD_FOLDER%\build"
+  - cpack -C %CONFIGURATION% -G TXZ
+  - appveyor PushArtifact librw.tar.xz
+cache:
+  C:\tools\vcpkg\installed\ -> .appveyor.yml
