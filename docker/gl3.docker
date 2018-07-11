@@ -1,0 +1,23 @@
+FROM ubuntu:rolling
+
+RUN apt-get update \
+    && apt-get install --no-install-recommends --no-upgrade -y \
+        build-essential \
+        cmake \
+        libglew-dev \
+        libglfw3-dev
+
+RUN rm -rf \
+    /var/lib/apt/lists/*
+
+RUN groupadd 1000 -g 1000 \
+    && groupadd 1001 -g 1001 \
+    && groupadd 2000 -g 2000 \
+    && groupadd 999 -g 999 \
+    && useradd -ms /bin/bash builder -g 1001 -G 1000,2000,999 \
+    && printf "builder:builder" | chpasswd \
+    && adduser builder sudo \
+    && printf "builder ALL= NOPASSWD: ALL\\n" >> /etc/sudoers
+
+USER builder
+WORKDIR /home/builder
