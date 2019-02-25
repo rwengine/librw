@@ -1,14 +1,25 @@
 if(LIBRW_PLATFORM_GL3)
     set(OpenGL_GL_PREFERENCE GLVND)
     find_package(OpenGL REQUIRED)
+    find_package(SDL2 REQUIRED)
     find_package(GLEW REQUIRED)
-    find_package(glfw3 REQUIRED)
 endif()
 
 add_library(librw
     "${PROJECT_SOURCE_DIR}/args.h"
     "${PROJECT_SOURCE_DIR}/rw.h"
 
+    rwbase.h
+    base.err
+    rwanim.h
+    rwengine.h
+    rwerror.h
+    rwobjects.h
+    rwpipeline.h
+    rwplg.h
+    rwplugins.h
+    rwrender.h
+    rwuserdata.h
     anim.cpp
     base.cpp
     bmp.cpp
@@ -27,15 +38,6 @@ add_library(librw
     plg.cpp
     prim.cpp
     render.cpp
-    rwanim.h
-    rwengine.h
-    rwerror.h
-    rwobjects.h
-    rwpipeline.h
-    rwplg.h
-    rwplugins.h
-    rwrender.h
-    rwuserdata.h
     skin.cpp
     texture.cpp
     tga.cpp
@@ -44,6 +46,12 @@ add_library(librw
     uvanim.cpp
     world.cpp
 
+    d3d/rwd3d8.h
+    d3d/rwd3d9.h
+    d3d/rwd3d.h
+    d3d/rwd3dimpl.h
+    d3d/rwxbox.h
+    d3d/rwxboximpl.h
     d3d/d3d8.cpp
     d3d/d3d8matfx.cpp
     d3d/d3d8render.cpp
@@ -56,17 +64,16 @@ add_library(librw
     d3d/d3ddevice.cpp
     d3d/d3dimmed.cpp
     d3d/d3drender.cpp
-    d3d/rwd3d8.h
-    d3d/rwd3d9.h
-    d3d/rwd3d.h
-    d3d/rwd3dimpl.h
-    d3d/rwxbox.h
-    d3d/rwxboximpl.h
     d3d/xbox.cpp
     d3d/xboxmatx.cpp
     d3d/xboxskin.cpp
     d3d/xboxvfmt.cpp
 
+    gl/rwgl3.h
+    gl/rwgl3impl.h
+    gl/rwgl3plg.h
+    gl/rwgl3shader.h
+    gl/rwwdgl.h
     gl/gl3.cpp
     gl/gl3device.cpp
     gl/gl3immed.cpp
@@ -76,22 +83,17 @@ add_library(librw
     gl/gl3render.cpp
     gl/gl3shader.cpp
     gl/gl3skin.cpp
-    gl/rwgl3.h
-    gl/rwgl3impl.h
-    gl/rwgl3plg.h
-    gl/rwgl3shader.h
-    gl/rwwdgl.h
     gl/wdgl.cpp
 
+    ps2/rwps2.h
+    ps2/rwps2impl.h
+    ps2/rwps2plg.h
     ps2/pds.cpp
     ps2/ps2.cpp
     ps2/ps2device.cpp
     ps2/ps2matfx.cpp
     ps2/ps2raster.cpp
     ps2/ps2skin.cpp
-    ps2/rwps2.h
-    ps2/rwps2impl.h
-    ps2/rwps2plg.h
     )
 
 target_include_directories(librw
@@ -104,6 +106,7 @@ target_compile_definitions(librw
         "$<IF:$<CONFIG:DEBUG>,DEBUG,NDEBUG>"
     PUBLIC
         "RW_${LIBRW_PLATFORM}"
+        "LIBRW_SDL2"
     )
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
@@ -130,17 +133,15 @@ set_target_properties(librw
     PROPERTIES
         C_STANDARD 99
         C_EXTENSIONS OFF
-        C_STANDARD_REQUIRED ON
         CXX_STANDARD 98
         CXX_EXTENSIONS OFF
-        CXX_STANDARD_REQUIRED ON
         PREFIX ""
     )
 
 if(LIBRW_PLATFORM_GL3)
     target_link_libraries(librw
         PUBLIC
-            glfw
+            SDL2
             GLEW::GLEW
             OpenGL::GL
         )
