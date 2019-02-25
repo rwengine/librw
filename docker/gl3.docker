@@ -17,7 +17,8 @@ RUN groupadd 1000 -g 1000 \
     && useradd -ms /bin/bash builder -g 1001 -G 1000,2000,999 \
     && printf "builder:builder" | chpasswd \
     && adduser builder sudo \
-    && printf "builder ALL= NOPASSWD: ALL\\n" >> /etc/sudoers
+    && printf "builder ALL= NOPASSWD: ALL\\n" >> /etc/sudoers \
+    && rm -rf /var/lib/apt/lists/*
 
 USER builder
 WORKDIR /home/builder

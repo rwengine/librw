@@ -12,7 +12,7 @@ environment:
 install:
   - if %platform%==Win32 set VCPKG_TRIPLET=x86-windows-static
   - if %platform%==x64 set VCPKG_TRIPLET=x64-windows-static
-  - if %LIBRW_PLATFORM%==GL3 vcpkg install glfw3:%VCPKG_TRIPLET% glew:%VCPKG_TRIPLET%
+  - if %LIBRW_PLATFORM%==GL3 vcpkg install SDL2:%VCPKG_TRIPLET% glew:%VCPKG_TRIPLET%
 before_build:
   - mkdir build
   - cd build
