@@ -5,7 +5,7 @@ RUN apt-get update \
         build-essential \
         cmake \
         libglew-dev \
-        libglfw3-dev
+        libsdl2-dev
 
 RUN rm -rf \
     /var/lib/apt/lists/*
