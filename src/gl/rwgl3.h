@@ -1,7 +1,7 @@
 #ifdef RW_GL3
 #include <GL/glew.h>
 #ifdef LIBRW_SDL2
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #else
 #include <GLFW/glfw3.h>
 #endif

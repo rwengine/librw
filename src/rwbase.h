@@ -227,7 +227,7 @@ inline V3d lerp(const V3d &a, const V3d &b, float32 r){
 	return makeV3d(a.x + r*(b.x - a.x),
 	               a.y + r*(b.y - a.y),
 	               a.z + r*(b.z - a.z));
-};
+}
 
 struct V4d
 {
@@ -281,7 +281,7 @@ struct RawMatrix
 	V3d at;
 	float32 atw;
 	V3d pos;
-	float32 posw;;
+	float32 posw;
 
 	static void mult(RawMatrix *dst, RawMatrix *src1, RawMatrix *src2);
 	static void transpose(RawMatrix *dst, RawMatrix *src);

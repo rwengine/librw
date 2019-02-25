@@ -13,7 +13,7 @@
 #ifdef RW_OPENGL
 #include <GL/glew.h>
 #ifdef LIBRW_SDL2
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #else
 #include <GLFW/glfw3.h>
 #endif
@@ -763,7 +763,6 @@ openSDL2(EngineStartParams *startparams)
 	ctx = SDL_GL_CreateContext(win);
 
 	/* Init GLEW */
-	glewExperimental = GL_TRUE;
 	status = glewInit();
 	if(status != GLEW_OK){
         	RWERROR((ERR_ENGINEOPEN, glewGetErrorString(status)));

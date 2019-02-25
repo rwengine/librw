@@ -96,7 +96,7 @@ lerp(const Quat &q, const Quat &p, float32 r)
 	                q1.x + r*(p.x - q1.x),
 	                q1.y + r*(p.y - q1.y),
 	                q1.z + r*(p.z - q1.z));
-};
+}
 
 Quat
 slerp(const Quat &q, const Quat &p, float32 a)
