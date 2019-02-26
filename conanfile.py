@@ -36,11 +36,13 @@ class LibrwConan(ConanFile):
         "fPIC": True,
         "platform": "null",
     }
-    generators = "cmake_find_package",
+    generators = ("cmake", "cmake_find_package", )
 
     def config_options(self):
         if self.settings.os != "Windows" and self.options.platform == "d3d":
-            raise ConanInvalidConfiguration("Current os does not support d3d")
+            raise ConanInvalidConfiguration("Only windows supports d3d")
+        if self.settings.os != "Linux" and self.options.platform == "ps2":
+            raise ConanInvalidConfiguration("Only linux supports ps2")
 
     def build_requirements(self):
         if self.options.platform == "ps2":
