@@ -3,7 +3,8 @@ add_executable(clumpview WIN32
     camera.h
     font.cpp
     main.cpp
-#    tests.cpp
+    ras_test.cpp
+    tl_tests.cpp
     )
 
 target_link_libraries(clumpview

@@ -23,9 +23,9 @@ script:
 
 matrix:
   include:
-  - os: linux
-    env: librw_platform=null CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=conanio/gcc8
-  - os: linux
-    env: librw_platform=gl3 CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=conanio/gcc8
-  - os: linux
-    env: librw_platform=ps2 CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=conanio/gcc8
+    - <<: *linux
+      env: librw_platform=null CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=conanio/gcc8
+    - <<: *linux
+      env: librw_platform=gl3 CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=conanio/gcc8
+    - <<: *linux
+      env: librw_platform=ps2 CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=conanio/gcc8

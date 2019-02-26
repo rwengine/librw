@@ -19,11 +19,6 @@ if(NOT LIBRW_PLATFORM IN_LIST LIBRW_PLATFORMS)
     message(FATAL_ERROR "Illegal LIBRW_PLATFORM=${LIBRW_PLATFORM}")
 endif()
 
-if(EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
-    include("${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
-    conan_basic_setup()
-endif()
-
 option(LIBRW_TOOLS "Build librw tools" OFF)
 option(LIBRW_INSTALL "Install librw files" OFF)
 

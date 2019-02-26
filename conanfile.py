@@ -3,6 +3,7 @@
 from conans import ConanFile, CMake, tools
 from conans.errors import ConanInvalidConfiguration
 import os
+import shutil
 
 
 class LibrwConan(ConanFile):
@@ -35,7 +36,7 @@ class LibrwConan(ConanFile):
         "fPIC": True,
         "platform": "null",
     }
-    generators = "cmake"
+    generators = "cmake_find_package",
 
     def config_options(self):
         if self.settings.os != "Windows" and self.options.platform == "d3d":
@@ -55,10 +56,20 @@ class LibrwConan(ConanFile):
         return str(self.options.platform).upper()
 
     def build(self):
+        if self.options.platform == "gl3":
+            shutil.copy("Findglew.cmake", "FindGLEW.cmake")
+            tools.replace_in_file("FindGLEW.cmake",
+                                  "glew::glew",
+                                  "GLEW::GLEW")
+            shutil.copy("Findsdl2.cmake", "FindSDL2.cmake")
+            tools.replace_in_file("FindSDL2.cmake",
+                                  "sdl2::sdl2",
+                                  "SDL2")
         cmake = CMake(self)
         cmake.definitions["LIBRW_PLATFORM"] = self._librw_platform
         cmake.definitions["LIBRW_INSTALL"] = "ON"
         cmake.definitions["LIBRW_TOOLS"] = "ON"
+        cmake.definitions["CMAKE_MODULE_PATH"] = self.build_folder
         cmake.configure()
         cmake.build()
 
