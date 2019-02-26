@@ -1,30 +1,25 @@
-image: Visual Studio 2017
-configuration: Release
-platform:
-  - Win32
-  - x64
+build: false
+
 environment:
-  APPVEYOR_SAVE_CACHE_ON_ERROR: true
-  matrix:
-    - LIBRW_PLATFORM: NULL
-    - LIBRW_PLATFORM: GL3
-    - LIBRW_PLATFORM: D3D9
+    PYTHON: "C:\\Python37"
+
+    matrix:
+        - MINGW_CONFIGURATIONS: '7@x86_64@seh@posix'
+          librw_platform: null
+        - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+          CONAN_VISUAL_VERSIONS: 15
+          librw_platform: null
+        - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+          CONAN_VISUAL_VERSIONS: 15
+          librw_platform: gl3
+        - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+          CONAN_VISUAL_VERSIONS: 15
+          librw_platform: d3d
 install:
-  - if %platform%==Win32 set VCPKG_TRIPLET=x86-windows-static
-  - if %platform%==x64 set VCPKG_TRIPLET=x64-windows-static
-  - if %LIBRW_PLATFORM%==GL3 vcpkg install SDL2:%VCPKG_TRIPLET% glew:%VCPKG_TRIPLET%
-before_build:
-  - mkdir build
-  - cd build
-  - if %platform%==Win32 set CMAKE_GENERATOR=Visual Studio 15 2017
-  - if %platform%==x64 set CMAKE_GENERATOR=Visual Studio 15 2017 Win64
-  - cmake .. -DLIBRW_TOOLS=ON -DLIBRW_INSTALL=ON -G"%CMAKE_GENERATOR%" -DVCPKG_TARGET_TRIPLET=%VCPKG_TRIPLET% -DCMAKE_TOOLCHAIN_FILE=C:/Tools/vcpkg/scripts/buildsystems/vcpkg.cmake -DLIBRW_PLATFORM=%LIBRW_PLATFORM%
-build:
-  project: c:\projects\librw\build\librw.sln
-  verbosity: minimal
-after_build:
-  - cd "%APPVEYOR_BUILD_FOLDER%\build"
-  - cpack -C %CONFIGURATION% -G TXZ
-  - appveyor PushArtifact librw.tar.xz
-cache:
-  C:\tools\vcpkg\installed\ -> .appveyor.yml
+  - set PATH=%PYTHON%;%PYTHON%/Scripts/;%PATH%
+  - pip.exe install conan --upgrade
+  - pip.exe install conan_package_tools bincrafters_package_tools
+  - conan user # It creates the conan data directory
+
+test_script:
+  - python build.py
