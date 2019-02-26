@@ -6,7 +6,7 @@ ENV PATH   $PATH:$PS2DEV/bin:$PS2DEV/ee/bin:$PS2DEV/iop/bin:$PS2DEV/dvp/bin:$PS2
 
 ENV DEBIAN_FRONTEND noninteractive
 
-ENV TOOLCHAIN_GIT_URL git://github.com/madebr/ps2toolchain.git
+ENV TOOLCHAIN_GIT_URL git://github.com/ps2dev/ps2toolchain.git
 ENV TOOLCHAIN_GIT_BRANCH master
 
 RUN mkdir -p "$PS2DEV" "$PS2SDK" \
