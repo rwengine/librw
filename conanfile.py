@@ -59,14 +59,11 @@ class LibrwConan(ConanFile):
 
     def build(self):
         if self.options.platform == "gl3":
-            shutil.copy("Findglew.cmake", "FindGLEW.cmake")
-            tools.replace_in_file("FindGLEW.cmake",
-                                  "glew::glew",
-                                  "GLEW::GLEW")
-            shutil.copy("Findsdl2.cmake", "FindSDL2.cmake")
-            tools.replace_in_file("FindSDL2.cmake",
-                                  "sdl2::sdl2",
-                                  "SDL2")
+            if not tools.os_info.is_windows:
+                shutil.copy("Findsdl2.cmake", "FindSDL2.cmake")
+                tools.replace_in_file("FindSDL2.cmake",
+                                      "sdl2::sdl2",
+                                      "SDL2")
         cmake = CMake(self)
         cmake.definitions["LIBRW_PLATFORM"] = self._librw_platform
         cmake.definitions["LIBRW_INSTALL"] = "ON"
