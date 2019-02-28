@@ -61,14 +61,13 @@ class LibrwConan(ConanFile):
         if self.options.platform == "gl3":
             if not tools.os_info.is_windows:
                 shutil.copy("Findsdl2.cmake", "FindSDL2.cmake")
-                tools.replace_in_file("FindSDL2.cmake",
-                                      "sdl2::sdl2",
-                                      "SDL2")
+            tools.replace_in_file("FindSDL2.cmake",
+                                  "sdl2::sdl2",
+                                  "SDL2", strict=False)
         cmake = CMake(self)
         cmake.definitions["LIBRW_PLATFORM"] = self._librw_platform
         cmake.definitions["LIBRW_INSTALL"] = "ON"
         cmake.definitions["LIBRW_TOOLS"] = "ON"
-        cmake.definitions["CMAKE_MODULE_PATH"] = self.build_folder
         cmake.configure()
         cmake.build()
 
