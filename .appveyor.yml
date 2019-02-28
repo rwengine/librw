@@ -14,7 +14,7 @@ environment:
           librw_platform: gl3
         - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
           CONAN_VISUAL_VERSIONS: 15
-          librw_platform: d3d
+          librw_platform: d3d9
 install:
   - set PATH=%PYTHON%;%PYTHON%/Scripts/;%PATH%
   - pip.exe install conan --upgrade

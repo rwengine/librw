@@ -29,7 +29,7 @@ class LibrwConan(ConanFile):
     options = {
         "shared": [True, False],
         "fPIC": [True, False],
-        "platform": ["null", "gl3", "d3d", "ps2",]
+        "platform": ["null", "gl3", "d3d9", "ps2",]
     }
     default_options = {
         "shared": False,
@@ -39,8 +39,8 @@ class LibrwConan(ConanFile):
     generators = ("cmake", "cmake_find_package", )
 
     def config_options(self):
-        if self.settings.os != "Windows" and self.options.platform == "d3d":
-            raise ConanInvalidConfiguration("Only windows supports d3d")
+        if self.settings.os != "Windows" and self.options.platform == "d3d9":
+            raise ConanInvalidConfiguration("Only windows supports d3d9")
         if self.settings.os != "Linux" and self.options.platform == "ps2":
             raise ConanInvalidConfiguration("Only linux supports ps2")
 
@@ -61,9 +61,13 @@ class LibrwConan(ConanFile):
         if self.options.platform == "gl3":
             if not tools.os_info.is_windows:
                 shutil.copy("Findsdl2.cmake", "FindSDL2.cmake")
+                shutil.copy("Findglew.cmake", "FindGLEW.cmake")
             tools.replace_in_file("FindSDL2.cmake",
                                   "sdl2::sdl2",
                                   "SDL2", strict=False)
+            tools.replace_in_file("FindGLEW.cmake",
+                                  "glew::glew",
+                                  "GLEW::GLEW", strict=False)
         cmake = CMake(self)
         cmake.definitions["LIBRW_PLATFORM"] = self._librw_platform
         cmake.definitions["LIBRW_INSTALL"] = "ON"
