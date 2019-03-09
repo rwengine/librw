@@ -6,29 +6,27 @@ namespace wdgl {
 
 void registerPlatformPlugins(void);
 
-struct AttribDesc
-{
-	// arguments to glVertexAttribPointer (should use OpenGL types here)
-	// Vertex = 0, TexCoord, Normal, Color, Weight, Bone Index, Extra Color
-	uint32 index;
-	// float = 0, byte, ubyte, short, ushort
-	int32 type;
-	bool32 normalized;
-	int32 size;
-	uint32 stride;
-	uint32 offset;
+struct AttribDesc {
+    // arguments to glVertexAttribPointer (should use OpenGL types here)
+    // Vertex = 0, TexCoord, Normal, Color, Weight, Bone Index, Extra Color
+    uint32 index;
+    // float = 0, byte, ubyte, short, ushort
+    int32 type;
+    bool32 normalized;
+    int32 size;
+    uint32 stride;
+    uint32 offset;
 };
 
-struct InstanceDataHeader : rw::InstanceDataHeader
-{
-	int32 numAttribs;
-	AttribDesc *attribs;
-	uint32 dataSize;
-	uint8 *data;
+struct InstanceDataHeader : rw::InstanceDataHeader {
+    int32 numAttribs;
+    AttribDesc *attribs;
+    uint32 dataSize;
+    uint8 *data;
 
-	// needed for rendering
-	uint32 vbo;
-	uint32 ibo;
+    // needed for rendering
+    uint32 vbo;
+    uint32 ibo;
 };
 
 // only RW_OPENGL
@@ -46,14 +44,13 @@ void registerNativeDataPlugin(void);
 
 void printPipeinfo(Atomic *a);
 
-class ObjPipeline : public rw::ObjPipeline
-{
+class ObjPipeline : public rw::ObjPipeline {
 public:
-	uint32 numCustomAttribs;
-	uint32 (*instanceCB)(Geometry *g, int32 i, uint32 offset);
-	void (*uninstanceCB)(Geometry *g);
+    uint32 numCustomAttribs;
+    uint32 (*instanceCB)(Geometry *g, int32 i, uint32 offset);
+    void (*uninstanceCB)(Geometry *g);
 
-	ObjPipeline(uint32 platform);
+    ObjPipeline(uint32 platform);
 };
 
 ObjPipeline *makeDefaultPipeline(void);
@@ -74,14 +71,13 @@ ObjPipeline *makeMatFXPipeline(void);
 
 // Raster
 
-struct Texture : rw::Texture
-{
-	void upload(void);
-	void bind(int n);
+struct Texture : rw::Texture {
+    void upload(void);
+    void bind(int n);
 };
 
 extern int32 nativeRasterOffset;
 void registerNativeRaster(void);
 
-}
-}
+}  // namespace wdgl
+}  // namespace rw

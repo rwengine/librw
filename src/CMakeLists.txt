@@ -1,7 +1,7 @@
 if(LIBRW_PLATFORM_GL3)
     set(OpenGL_GL_PREFERENCE GLVND)
-    find_package(OpenGL REQUIRED)
-    find_package(SDL2 REQUIRED)
+    #find_package(OpenGL REQUIRED)
+    #find_package(SDL2 REQUIRED)
     find_package(GLEW REQUIRED)
 endif()
 
@@ -9,42 +9,42 @@ add_library(librw
     "${PROJECT_SOURCE_DIR}/args.h"
     "${PROJECT_SOURCE_DIR}/rw.h"
 
-    rwbase.h
-    base.err
-    rwanim.h
-    rwengine.h
-    rwerror.h
-    rwobjects.h
-    rwpipeline.h
-    rwplg.h
+    Animation.cpp
+    Animation.hpp
+    Base.cpp
+    Base.hpp
+    Base.err
+    Engine.cpp
+    Engine.hpp
+    Error.hpp
+    Objects.hpp
+    Pipeline.hpp
+    Plg.hpp
     rwplugins.h
-    rwrender.h
-    rwuserdata.h
-    anim.cpp
-    base.cpp
-    bmp.cpp
-    camera.cpp
-    clump.cpp
-    engine.cpp
-    error.cpp
-    frame.cpp
-    geometry.cpp
-    geoplg.cpp
-    hanim.cpp
-    image.cpp
-    light.cpp
-    matfx.cpp
-    pipeline.cpp
-    plg.cpp
-    prim.cpp
-    render.cpp
-    skin.cpp
-    texture.cpp
-    tga.cpp
-    tristrip.cpp
-    userdata.cpp
-    uvanim.cpp
-    world.cpp
+    Render.hpp
+    UserData.hpp
+    Bmp.cpp
+    Camera.cpp
+    Clump.cpp
+    Error.cpp
+    Frame.cpp
+    Geometry.cpp
+    Geoplg.cpp
+    Hanim.cpp
+    Image.cpp
+    Light.cpp
+    MatFx.cpp
+    Pipeline.cpp
+    Plg.cpp
+    Prim.cpp
+    Render.cpp
+    Skin.cpp
+    Texture.cpp
+    Tga.cpp
+    Tristrip.cpp
+    UserData.cpp
+    UvAnim.cpp
+    World.cpp
 
     d3d/rwd3d8.h
     d3d/rwd3d9.h
@@ -117,9 +117,8 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang
     if (NOT LIBRW_PLATFORM_PS2)
         target_compile_options(librw
             PRIVATE
-                "-Wextra"
+
                 "-Wdouble-promotion"
-                "-Wpedantic"
             )
     endif()
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
@@ -131,9 +130,9 @@ endif()
 
 set_target_properties(librw
     PROPERTIES
-        C_STANDARD 99
+        C_STANDARD 11
         C_EXTENSIONS OFF
-        CXX_STANDARD 98
+        CXX_STANDARD 17
         CXX_EXTENSIONS OFF
         PREFIX ""
     )
@@ -168,16 +167,16 @@ if(LIBRW_INSTALL)
     install(
         FILES
             base.err
-            rwbase.h
-            rwerror.h
-            rwplg.h
-            rwrender.h
-            rwengine.h
-            rwpipeline.h
-            rwobjects.h
-            rwanim.h
+            Base.hpp
+            Error.hpp
+            Plg.hpp
+            Render.hpp
+            Engine.hpp
+            Pipeline.hpp
+            Objects.hpp
+            Animation.hpp
             rwplugins.h
-            rwuserdata.h
+            UserData.hpp
         DESTINATION "${LIBRW_INSTALL_INCLUDEDIR}/src"
         )
     install(

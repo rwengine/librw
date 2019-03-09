@@ -9,5 +9,5 @@ ObjPipeline *makeMatFXPipeline(void);
 void initMatFX(void);
 void initSkin(void);
 
-}
-}
+}  // namespace gl3
+}  // namespace rw

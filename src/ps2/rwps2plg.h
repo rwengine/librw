@@ -1,4 +1,13 @@
+#include "../Base.hpp"
+
 namespace rw {
+class ObjPipeline;
+struct Geometry;
+struct Vertex;
+struct Mesh;
+struct Skin;
+class MatPipeline;
+
 namespace ps2 {
 
 // MatFX plugin
@@ -20,8 +29,8 @@ int32 getSizeNativeSkin(void *object, int32 offset);
 
 void instanceSkinData(Geometry *g, Mesh *m, Skin *skin, uint32 *data);
 
-void skinPreCB(MatPipeline*, Geometry*);
-void skinPostCB(MatPipeline*, Geometry*);
+void skinPreCB(MatPipeline *, Geometry *);
+void skinPostCB(MatPipeline *, Geometry *);
 
-}
-}
+}  // namespace ps2
+}  // namespace rw
